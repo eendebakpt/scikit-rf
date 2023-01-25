@@ -5339,15 +5339,23 @@ def innerconnect_s(A: npy.ndarray, k: int, l: int) -> npy.ndarray:
     C = npy.zeros(shape=A.shape, dtype='complex')
 
     # loop through ports and calculates resultant s-parameters
+    Akk = A[:, k, k]
+    All = A[:, l, l]
+    Akl = A[:, k, l]
+    one_minus_Alk = 1 - A[:, l, k]
     for i in range(nA):
+        Aik = A[:, i, k]
+        Ail = A[:, i, l]
         for j in range(nA):
+            Akj = A[:, k, j]
+            Alj = A[:, l, j]
             C[:, i, j] = \
                 A[:, i, j] + \
-                (A[:, k, j] * A[:, i, l] * (1 - A[:, l, k]) + \
-                 A[:, l, j] * A[:, i, k] * (1 - A[:, k, l]) + \
-                 A[:, k, j] * A[:, l, l] * A[:, i, k] + \
-                 A[:, l, j] * A[:, k, k] * A[:, i, l]) / \
-                ((1 - A[:, k, l]) * (1 - A[:, l, k]) - A[:, k, k] * A[:, l, l])
+                (Akj * Ail * one_minus_Alk + \
+                 Alj * Aik * (1 - Akl) + \
+                 Akj * All * Aik + \
+                 Alj * Akk * Ail) / \
+                ((1 - Akl) * one_minus_Alk - Akk * All)
 
     # remove ports that were `connected`
     C = npy.delete(C, (k, l), 1)
