@@ -1887,12 +1887,17 @@ class Network:
         return True
 
     ## CLASS METHODS
-    def copy(self) -> 'Network':
+    def copy(self, name : Optional[str] = None) -> 'Network':
         """
         Returns a copy of this Network
 
         Needed to allow pass-by-value for a Network instead of
         pass-by-reference
+
+        Parameters
+        ----------
+        name
+            Optional new name for the copy
 
         Returns
         -------
@@ -1903,13 +1908,12 @@ class Network:
         ntwk = Network(s=self.s,
                        frequency=self.frequency,
                        z0=self.z0, s_def=self.s_def,
-                       comments=self.comments
+                       comments=self.comments,
+                       name = self.name if name is None else name
                        )
 
         if self.params is not None:
             ntwk.params = self.params.copy()
-
-        ntwk.name = self.name
 
         if self.noise is not None and self.noise_freq is not None:
           ntwk.noise = self.noise.copy()

@@ -72,8 +72,12 @@ class NetworkTestCase(unittest.TestCase):
         n = self.ntwk1
         n2 = n.copy()
         self.assertEqual( n.frequency, n2.frequency)
+        self.assertEqual( n.name, n2.name)
         self.assertNotEqual( id(n.frequency), id(n2.frequency))
         self.assertNotEqual( id(n.frequency.f), id(n2.frequency.f))
+
+        n3 = n.copy(name='hi')
+        self.assertEqual( n3.name, 'hi')
 
         n.frequency.f[0] = 0
         self.assertNotEqual(n2.frequency.f[0], 0)
